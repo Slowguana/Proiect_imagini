@@ -40,4 +40,4 @@ def citit_img(request):
 
     context.update({'form': form, })
     
-    return render(request, "aplicatie_proiect/templ_img.html", {"image_text":context[form]})
+    return render(request, "aplicatie_proiect/templ_img.html", {"image_text":image_text})
