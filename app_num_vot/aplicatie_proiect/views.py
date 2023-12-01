@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from PIL import Image
-import pytesseract
+import pytesseract as tess
 from .forms import UploadFileForm
+from PIL import Image
+tess.pytesseract.tesseract_cmd = r'C:\Users\Tudor\AppData\Local\Programs\Tesseract-OCR\tesseract'
 # Create your views here.
 
 def index(response):
@@ -11,33 +13,21 @@ def index(response):
 
 
 def citit_img(request):
-    context = dict()
-    image_text=None
-    # Windows users need to add something like:
-    # pytesseract.pytesseract.tesseract.cmd = "C:/Program Files/Tesseract-OCR/tesseract.exe"
-    pytesseract.pytesseract.tesseract_cmd = 'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
+    context = {}
+    image_text = "None"
+    context.update({'image_text':image_text})
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            
-            image = Image.open(request.FILES['file_upload'])
-            image_text = pytesseract.image_to_string(image)
-            # If you were handling larger files, perhaps something like this would be better
-            # with tempfile.TemporaryFile() as temp_file:
-            #     for chunk in request.FILES['file_upload'].chunks():
-            #         temp_file.write(chunk)
-            #     image = Image.open(temp_file)
-            #     image_text = pytesseract.image_to_string(image)
+            image = Image.open(request.FILES['image'])
+            image_text = tess.image_to_string(image)
 
-            context.update({'image_text': image_text, })
-            # reset the form: typically we'd redirect elsewhere to prevent multiple
-            # submissions of data, but there is no database interaction here - only
-            # sending the text back
-            form = UploadFileForm()
+            context.update({'image_text': image_text})
+            form = UploadFileForm()  # Reset the form after processing
+
     else:
         form = UploadFileForm()
 
-    context.update({'form': form, })
+    context.update({'form': form})
     
-    return render(request, "aplicatie_proiect/templ_img.html", {"image_text":image_text})
+    return render(request, "aplicatie_proiect/templ_img.html", context)
