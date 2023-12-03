@@ -1,8 +1,8 @@
 from django import forms
 
-class UploadFileForm(forms.Form):
-    """
-    Simplest of forms to provide file upload
-    """
-    title = forms.CharField(max_length=50)
-    file = forms.FileField()
+from .models import UploadedImage
+
+class ImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = UploadedImage
+        fields = ['image']
