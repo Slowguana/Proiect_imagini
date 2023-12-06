@@ -5,7 +5,7 @@ from PIL import Image as PilImage
 from .forms import ImageUploadForm
 import uuid
 import os
-
+import cv2
 tess.pytesseract.tesseract_cmd = r'C:\Users\Tudor\AppData\Local\Programs\Tesseract-OCR\tesseract'
 # Create your views here.
 
@@ -30,10 +30,12 @@ def upload_image(request):
 
             # Save the form with the updated image field
             instance.save()
-
+            
             # Now that the image is saved, get its path and perform OCR
             image_path = os.path.join(r'C:\Users\Tudor\Desktop\aplicatie_lucru\app_num_vot\uploaded_images', unique_filename)
-            extracted_text = tess.image_to_string(PilImage.open(image_path))
+            img=cv2.imread(image_path)
+            gray_img=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+            extracted_text = tess.image_to_string(gray_img)
 
             # Process or display the extracted text as needed
     else:
