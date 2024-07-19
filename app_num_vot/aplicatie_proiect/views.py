@@ -14,7 +14,7 @@ def index(response):
 
 
 def upload_image(request):
-    extracted_text="Asteptam"
+    extracted_text="Nu asteptam"
     image_path = r'C:\Users\Tudor\Desktop\aplicatie_lucru\app_num_vot\uploaded_images/'  # Replace this with the correct path
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
